@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NftScanner": {
+      "commandName": "Project",
+      "commandLineArgs": "2ea275d07c1f52a1936fb22999c13da4729d68bbf7ddaf978fbb2255aa71a225\nf6de1ed8182386ae9e9eb849bbf4ff547948cbce1f2286465221ba05de3a3e1b"
+    }
+  }
+}
