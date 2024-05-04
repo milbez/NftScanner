@@ -26,9 +26,14 @@ namespace NftScanner
     /// <returns></returns>
     public async Task Run(string[] args)
     {
+      if(args.Length == 0)
+      {
+        Console.WriteLine($"Warning: No Argument Found!");
+      }
+
       foreach (var arg in args)
       {
-        Console.WriteLine($"Argument: {arg}");
+        Console.WriteLine($"Info: Process Start (Argument: {arg})");
 
         //Create Directory for Transaction
         var dirName = $"{TransactionRootDirectory}//{arg}";
@@ -36,6 +41,8 @@ namespace NftScanner
 
         //Get Transaction
         await GetTransactions(dirName, arg);
+
+        Console.WriteLine($"Info: Process End (Argument: {arg})");
       }
     }
 
@@ -49,6 +56,11 @@ namespace NftScanner
     {
       //Get Transaction
       var transactions = await _blockFrostClient.GetTransactions(hash);
+      if(transactions == null)
+      {
+        Console.WriteLine($"Warning: Transaction Not Found (Argument:  {hash})!");
+        return;
+      }
 
       //Create Transaction Specific Assets List
       var assetList = new List<TransactionAmount>();
@@ -57,17 +69,24 @@ namespace NftScanner
         .ToList().ForEach(p => assetList.Add(p)));
 
       //Get All Specific Assets
-      await GetAssets(dirName, assetList.ToArray());
+      await GetAssets(dirName, hash, assetList.ToArray());
     }
 
     /// <summary>
     /// Get All Specific Assets
     /// </summary>
     /// <param name="dirName">Transaction Directory Name</param>
+    /// <param name="arg">Transaction Hash</param>
     /// <param name="model">List of Specific Assets</param>
     /// <returns></returns>
-    private async Task GetAssets(string dirName, TransactionAmount[] model)
+    private async Task GetAssets(string dirName, string arg, TransactionAmount[] model)
     {
+      if (model?.Length <= 0)
+      {
+        Console.WriteLine($"Warning: Transaction Asset Not Found (Argument:  {arg})!");
+        return;
+      }
+
       var imageList = new List<AssetOnchaineMetadata>();
 
       //Get All Specific Assets
@@ -83,17 +102,24 @@ namespace NftScanner
       }
 
       //Get All Images
-      await GetImages(dirName, imageList.ToArray());
+      await GetImages(dirName, arg, imageList.ToArray());
     }
 
     /// <summary>
     /// Get All Images
     /// </summary>
     /// <param name="dirName">Transaction Directory Name</param>
+    /// <param name="arg">Transaction Hash</param>
     /// <param name="model">List of Image URL</param>
     /// <returns></returns>
-    private async Task GetImages(string dirName, AssetOnchaineMetadata[] model)
+    private async Task GetImages(string dirName, string arg, AssetOnchaineMetadata[] model)
     {
+      if (model?.Length <= 0)
+      {
+        Console.WriteLine($"Warning: Transaction Image Not Found (Argument:  {arg})!");
+        return;
+      }
+
       foreach (var metadataItem in model)
       {
         //Get Image Hash

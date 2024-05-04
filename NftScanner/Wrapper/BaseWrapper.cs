@@ -1,6 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text.Json;
-using System.Xml.Serialization;
 
 namespace NftScanner.Wrapper
 {
@@ -36,7 +36,7 @@ namespace NftScanner.Wrapper
     protected virtual HttpClient GetHttpClient(string? uri)
     {
       var httpClient = _httpClientFactory.CreateClient();
-//      ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+      ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
       httpClient.DefaultRequestHeaders.Accept.Clear();
       httpClient.DefaultRequestHeaders.Add("project_id", _settings.BlockFrostApiKey);
       if (uri != null)
